@@ -5,14 +5,16 @@ export const useTodos = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('https://jsonplaceholder.typicode.com/todos')
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch('https://jsonplaceholder.typicode.com/todos', { signal })
       .then((res) => res.json())
       .then((data) => {
         setTodos(data);
         setLoading(false);
       });
     return () => {
-      // id.cancel;
+      controller.abort(); // Clean up the fetch request on component unmount
     };
   }, []);
 
